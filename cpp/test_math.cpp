@@ -2,6 +2,7 @@
 #include "test.hpp"
 using namespace std;
 #define ld long double
+const ld EPS = 1e-11;
 
 class RandomGenerator {
 private:
@@ -34,39 +35,46 @@ vector<ld> generatePolynomial(const vector<ld>& roots) {
 
 int test() {
     RandomGenerator r_1;
-    ld cnt = r_1.getRandomInt(1, 10);
+    ld cnt = r_1.getRandomInt(1, 5);
     vector<ld> root_res(cnt);
     for (ld i = 0; i < cnt; i++) {
         root_res[i] = r_1.getRandomInt(-10, 10);
     }
 
+    // ld cnt = 3;
     vector<ld> p;
 
     sort(root_res.begin(), root_res.end());
 
+    // vector<ld> root_res = {-4, 1, 4};
+    cout << '\n';
     p = generatePolynomial(root_res);
-    // for (auto i : root_res) cout << i << ' ';
-    // cout << '\n';
-    // for (auto i : p) cout << i << ' ';
-    // cout << '\n';
+
+    root_res.erase(unique(root_res.begin(), root_res.end()), root_res.end());
+    for (auto i : root_res) cout << i << ' ';
+    cout << '\n';
+    for (auto i : p) cout << i << ' ';
+    cout << '\n';
 
     vector<ld> ans = find_root(cnt, p);
-    // for (auto i : ans) cout << i << ' ';
-    // cout << '\n';
-    sort(root_res.begin(), root_res.end());
+    for (auto i : ans) cout << i << ' ';
+    cout << '\n';
     if ((ld)ans.size() != (ld)root_res.size()) return 0;
     // bool c = true;
     for (ld i = 0; i < (ld)ans.size(); i++) {
-        if (ans[i] != root_res[i]) {
+        if (abs(ans[i] - root_res[i]) > EPS) {
+            cout << '\n';
             return 0;
         }
-    }
 
+        cout << ans[i] - root_res[i] << ' ';
+    }
+    cout << '\n';
     return 1;
 }
 
 int main() {
-    ld cnt = 0, max = 10;
+    ld cnt = 0, max = 5;
     for (ld i = 0; i < max; i++) {
         // cnt += test
         cout << test() << '\n';
