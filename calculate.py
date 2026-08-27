@@ -3,10 +3,6 @@ from mpmath import mp
 
 mp.dps = 100
 
-# =====================================================
-# Polynomial
-# =====================================================
-
 def make_poly(coefs, x):
     expr = sum(
         sp.Rational(c) * x ** (len(coefs) - 1 - i)
@@ -20,10 +16,6 @@ def poly_value(coefs, x):
         res = res * x + mp.mpf(str(c))
     return res
 
-# =====================================================
-# E_n(theta)
-# =====================================================
-
 def E(theta, coefs):
     t = mp.tan(theta)
     n = len(coefs) - 1
@@ -36,10 +28,6 @@ def E(theta, coefs):
     
     power = (n - 1) // 2
     return ((-1) ** power) * s
-
-# =====================================================
-# Sturm Sequence
-# =====================================================
 
 def build_sturm(P):
     seq = [P]
@@ -58,10 +46,6 @@ def build_sturm(P):
         B = R
     return seq
 
-# =====================================================
-# Sign Variations
-# =====================================================
-
 def count_sign_variations(sturm_seq, x_val):
     x_val = sp.Float(str(x_val), 150)
     prev = None
@@ -77,10 +61,6 @@ def count_sign_variations(sturm_seq, x_val):
 
 def roots_in_interval(sturm_seq, L, R):
     return count_sign_variations(sturm_seq, L) - count_sign_variations(sturm_seq, R)
-
-# =====================================================
-# Refine root using E_n(theta)
-# =====================================================
 
 def refine_root_via_E(L, R, coefs):
     theta_L = mp.atan(-R)
@@ -125,10 +105,6 @@ def refine_root_via_E(L, R, coefs):
     theta = (theta_L + theta_R) / 2
     return -mp.tan(theta)
 
-# =====================================================
-# Recursive Isolation
-# =====================================================
-
 def isolate(sturm_seq, coefs, L, R):
     cnt = roots_in_interval(sturm_seq, L, R)
     if cnt == 0: return []
@@ -144,10 +120,6 @@ def isolate(sturm_seq, coefs, L, R):
     left = isolate(sturm_seq, coefs, L, M)
     right = isolate(sturm_seq, coefs, M, R)
     return left + right
-
-# =====================================================
-# Main
-# =====================================================
 
 def find_roots_lills_method(coefs):
     x = sp.Symbol('x')
@@ -179,27 +151,3 @@ def find_roots_lills_method(coefs):
                 
     all_roots.sort()
     return all_roots
-
-# =====================================================
-# TEST
-# =====================================================
-
-if __name__ == "__main__":
-    tests = [
-        ([1, 18, 7, -1528, -8285, 5690, 98817, -5620, -413100, 324000, 0], "Test 11 degree"),
-        ([1, 12, -28, -480], "x^3 + 12x^2 - 28x - 480"),
-        ([1, -8, 12], "x^2 - 8x + 12"),
-        ([1, 1, -2], "x^2 + x - 2")
-    ]
-    
-    for coefs, name in tests:
-        print()
-        print("="*60)
-        print(name)
-        print("="*60)
-        
-        roots = find_roots_lills_method(coefs)
-        for r in roots:
-            print(mp.nstr(r, 50))
-            print("P(x)=", mp.nstr(poly_value(coefs, r), 20))
-            print("-" * 30)
