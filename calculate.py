@@ -155,3 +155,9 @@ def find_polynomial_roots(coeffs):
     seq = build_sturm_sequence(coeffs_sf) 
     roots = find_roots_in_interval(seq, L, R, MIN_WIDTH)
     return sorted(round(float(r)) for r in roots)
+
+N = int(input())
+coeff = list(map(int, input().split()))
+res = find_polynomial_roots(coeff)
+print(res)
+
